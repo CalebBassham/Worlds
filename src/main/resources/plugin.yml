@@ -1,0 +1,10 @@
+name: Worlds
+version: "1.0"
+author: Caleb Bassham
+main: me.calebbassham.worlds.BukkitPlugin
+api-version: "1.14"
+depend: [FastAsyncWorldEdit]
+
+commands:
+  world:
+    permission: worlds.command.world

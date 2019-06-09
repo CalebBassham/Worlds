@@ -1,0 +1,72 @@
+package me.calebbassham.worlds;
+
+import com.boydti.fawe.bukkit.wrapper.AsyncWorld;
+import com.boydti.fawe.jnbt.anvil.MCAWorld;
+import com.boydti.fawe.util.EditSessionBuilder;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.util.List;
+
+public class WorldCmd implements CommandExecutor, TabCompleter {
+
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("create")) {
+                String worldName = args[1];
+                AsyncWorld.create(new WorldCreator(worldName));
+                Bukkit.broadcastMessage("Created " + worldName + ".");
+            }
+
+            if (args[0].equalsIgnoreCase("unload")) {
+                String worldName = args[1];
+                Bukkit.unloadWorld(worldName, true);
+                Bukkit.broadcastMessage("Unloaded " + worldName + ".");
+            }
+
+            if (args[0].equalsIgnoreCase("tp")) {
+                if (!(sender instanceof Player)) return true;
+                Player player = (Player) sender;
+                World world = Bukkit.getWorld(args[1]);
+                if (world == null) {
+                    player.sendMessage(args[1] + " is not a loaded world.");
+                    return true;
+                }
+                player.teleportAsync(world.getSpawnLocation());
+            }
+
+            if (args[0].equalsIgnoreCase("generate")) {
+                String worldName = args[1];
+                File worldFolder = new File(worldName + File.separator + "region");
+                MCAWorld world = new MCAWorld(worldName, worldFolder, true);
+                EditSession session = new EditSessionBuilder(world)
+                        .checkMemory(false)
+                        .allowedRegionsEverywhere()
+                        .fastmode(true)
+                        .changeSetNull()
+                        .limitUnlimited()
+                        .build();
+                CuboidRegion region = new CuboidRegion(BlockVector3.at(-750, 0, -750), BlockVector3.at(750, 256, 750));
+                world.regenerate(region, session);
+                Bukkit.broadcastMessage("Generating (-750, 0, -750) to (750, 256, 750)");
+            }
+        }
+
+        return false;
+    }
+
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return null;
+    }
+}
