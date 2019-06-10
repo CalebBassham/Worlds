@@ -3,7 +3,7 @@ version: "1.0"
 author: Caleb Bassham
 main: me.calebbassham.worlds.BukkitPlugin
 api-version: "1.14"
-depend: [FastAsyncWorldEdit]
+#depend: [FastAsyncWorldEdit]
 
 commands:
   world:
