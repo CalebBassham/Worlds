@@ -28,6 +28,7 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
 
                 if (Worlds.worldDirectoryExists(worldName)) {
                     sender.sendMessage(worldName + " already exists but is not loaded.");
+                    return true;
                 }
 
                 new WorldCreator(worldName).createWorld();
