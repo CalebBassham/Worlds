@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Worlds {
 
-    public static File getWorldDirectory(String worldName) {
+    public static File getDirectoryInWorldsDirectory(String worldName) {
         File worldDir = Bukkit.getWorldContainer().toPath().resolve(worldName).toFile();
         if (worldDir == null || !worldDir.exists()) return null;
         if (!worldDir.isDirectory()) return null;
@@ -15,7 +15,7 @@ public class Worlds {
     }
 
     public static boolean worldDirectoryExists(String worldName) {
-        return getWorldDirectory(worldName) != null;
+        return getDirectoryInWorldsDirectory(worldName) != null;
     }
 
     public static boolean worldIsLoaded(String worldName) {
@@ -32,13 +32,18 @@ public class Worlds {
             throw new IllegalStateException(worldName + " must be unloaded before it can be archived.");
         }
 
-        File world = getWorldDirectory(worldName);
+        File world = getDirectoryInWorldsDirectory(worldName);
 
         if (world == null) {
             throw new IllegalStateException(worldName + " does not exist.");
         }
 
         Util.zip(world.toPath(), Bukkit.getWorldContainer().toPath().resolve(worldName + ".zip"));
+    }
+
+    public static boolean isWorldDirectory(File file) {
+        File regionDir = file.toPath().resolve("region").toFile();
+        return regionDir != null && regionDir.exists() && regionDir.isDirectory();
     }
 
 }

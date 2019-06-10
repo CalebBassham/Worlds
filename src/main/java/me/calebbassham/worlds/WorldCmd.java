@@ -26,13 +26,21 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                if (Worlds.worldDirectoryExists(worldName)) {
+                File worldDir = Worlds.getDirectoryInWorldsDirectory(worldName);
+
+                if (worldDir != null) {
+                    if (!Worlds.isWorldDirectory(worldDir)) {
+                        sender.sendMessage("Cannot create " + worldName + " world because the " + worldName + " directory already exists.");
+                        return true;
+                    }
+
                     sender.sendMessage(worldName + " already exists but is not loaded.");
                     return true;
                 }
 
+                sender.sendMessage("Started to create " + worldName + ".");
                 new WorldCreator(worldName).createWorld();
-                Bukkit.broadcastMessage("Created " + worldName + ".");
+                sender.sendMessage("Created " + worldName + ".");
             }
 
             if (args[0].equalsIgnoreCase("unload")) {
@@ -76,7 +84,7 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                File worldDir = Worlds.getWorldDirectory(worldName);
+                File worldDir = Worlds.getDirectoryInWorldsDirectory(worldName);
 
                 if (worldDir == null) {
                     sender.sendMessage(worldName + " does not exist.");
