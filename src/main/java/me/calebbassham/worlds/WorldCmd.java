@@ -91,7 +91,7 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                if(worldDir.delete()) {
+                if (worldDir.delete()) {
                     sender.sendMessage(worldName + " has been deleted.");
                 } else {
                     sender.sendMessage(worldName + " could not be deleted.");
@@ -107,9 +107,19 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                     Worlds.archiveWorld(worldName);
                 } catch (IllegalArgumentException e) {
                     sender.sendMessage("Error: " + e.getMessage());
+                    return true;
                 } catch (IOException e) {
                     sender.sendMessage("Failed to zip world folder.");
                     e.printStackTrace();
+                    return true;
+                }
+
+                sender.sendMessage("Archived " + worldName + ".");
+
+                if(Worlds.getDirectoryInWorldsDirectory(worldName).delete()) {
+                    sender.sendMessage(worldName + " has been deleted.");
+                } else {
+                    sender.sendMessage(worldName + " could not be deleted.");
                 }
             }
 
