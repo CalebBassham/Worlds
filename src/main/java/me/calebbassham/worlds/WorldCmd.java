@@ -45,12 +45,26 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                 sender.sendMessage(getPrefix() + "Started to create " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
                 new WorldCreator(worldName).createWorld();
                 sender.sendMessage(getPrefix() + "Finished creating " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
+                return true;
             }
 
             if (args[0].equalsIgnoreCase("unload")) {
                 String worldName = args[1];
+                World world = Bukkit.getWorld(worldName);
+
+                if (world == null) {
+                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " does not exist.");
+                    return true;
+                }
+
+                if (world.getPlayerCount() > 0) {
+                    sender.sendMessage(getErrorPrefix() + "Cannot unload world while players are in it.");
+                    return true;
+                }
+
                 Bukkit.unloadWorld(worldName, true);
                 Bukkit.broadcastMessage(getPrefix() + "Unloaded " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
+                return true;
             }
 
             if (args[0].equalsIgnoreCase("tp")) {
@@ -126,6 +140,8 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                 } else {
                     sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " could not be deleted.");
                 }
+
+                return true;
             }
 
 //            if (args[0].equalsIgnoreCase("generate")) {
