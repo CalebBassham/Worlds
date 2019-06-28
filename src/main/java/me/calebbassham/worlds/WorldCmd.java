@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static me.calebbassham.pluginmessageformat.PluginMessageFormat.getMainColorPallet;
-import static me.calebbassham.pluginmessageformat.PluginMessageFormat.getPrefix;
+import static me.calebbassham.pluginmessageformat.PluginMessageFormat.*;
 
 public class WorldCmd implements CommandExecutor, TabCompleter {
 
@@ -43,15 +42,15 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                sender.sendMessage("Started to create " + worldName + ".");
+                sender.sendMessage(getPrefix() + "Started to create " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
                 new WorldCreator(worldName).createWorld();
-                sender.sendMessage("Created " + worldName + ".");
+                sender.sendMessage(getPrefix() + "Finished creating " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
             }
 
             if (args[0].equalsIgnoreCase("unload")) {
                 String worldName = args[1];
                 Bukkit.unloadWorld(worldName, true);
-                Bukkit.broadcastMessage("Unloaded " + worldName + ".");
+                Bukkit.broadcastMessage(getPrefix() + "Unloaded " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
             }
 
             if (args[0].equalsIgnoreCase("tp")) {
@@ -59,7 +58,7 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
                 World world = Bukkit.getWorld(args[1]);
                 if (world == null) {
-                    player.sendMessage(args[1] + " is not a loaded world.");
+                    player.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + args[1] + getErrorColorPallet().getPrimaryTextColor() + " is not a loaded world.");
                     return true;
                 }
                 player.teleportAsync(world.getSpawnLocation());
@@ -69,37 +68,38 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                 String worldName = args[1];
 
                 if (Worlds.worldIsLoaded(worldName)) {
-                    sender.sendMessage(worldName + " is already loaded.");
+                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " is already loaded.");
                     return true;
                 }
 
                 if (!Worlds.worldDirectoryExists(worldName)) {
-                    sender.sendMessage(worldName + " does not exist.");
+                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " does not exist.");
                     return true;
                 }
 
                 Bukkit.createWorld(WorldCreator.name(worldName));
+                sender.sendMessage(getPrefix() + "Loaded " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
             }
 
             if (args[0].equalsIgnoreCase("delete")) {
                 String worldName = args[1];
 
                 if (Worlds.worldIsLoaded(worldName)) {
-                    sender.sendMessage(worldName + " is currently loaded.");
+                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " is currently loaded.");
                     return true;
                 }
 
                 File worldDir = Worlds.getDirectoryInWorldsDirectory(worldName);
 
                 if (worldDir == null) {
-                    sender.sendMessage(worldName + " does not exist.");
+                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " does not exist.");
                     return true;
                 }
 
                 if (worldDir.delete()) {
-                    sender.sendMessage(worldName + " has been deleted.");
+                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " has been deleted.");
                 } else {
-                    sender.sendMessage(worldName + " could not be deleted.");
+                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " could not be deleted.");
                 }
 
                 return true;
@@ -111,20 +111,20 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                 try {
                     Worlds.archiveWorld(worldName);
                 } catch (IllegalArgumentException e) {
-                    sender.sendMessage("Error: " + e.getMessage());
+                    sender.sendMessage(getErrorPrefix() + e.getMessage());
                     return true;
                 } catch (IOException e) {
-                    sender.sendMessage("Failed to zip world folder.");
+                    sender.sendMessage(getErrorPrefix() + "Failed to zip world folder.");
                     e.printStackTrace();
                     return true;
                 }
 
-                sender.sendMessage("Archived " + worldName + ".");
+                sender.sendMessage(getPrefix() + "Archived " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
 
                 if(Worlds.getDirectoryInWorldsDirectory(worldName).delete()) {
-                    sender.sendMessage(worldName + " has been deleted.");
+                    sender.sendMessage(getPrefix() + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + " has been deleted.");
                 } else {
-                    sender.sendMessage(worldName + " could not be deleted.");
+                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " could not be deleted.");
                 }
             }
 
