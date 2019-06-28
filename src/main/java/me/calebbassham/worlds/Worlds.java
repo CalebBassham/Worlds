@@ -55,4 +55,12 @@ public class Worlds {
                 .collect(Collectors.toSet());
     }
 
+    public static Set<String> getUnloadedWorlds() {
+        return getWorldDirectories()
+                .stream()
+                .map(File::getName)
+                .filter(name -> Bukkit.getWorld(name) == null)
+                .collect(Collectors.toSet());
+    }
+
 }

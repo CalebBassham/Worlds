@@ -12,9 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static me.calebbassham.pluginmessageformat.PluginMessageFormat.getMainColorPallet;
@@ -171,6 +169,31 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
     }
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return null;
+        if (args.length == 1) {
+            return Arrays.stream(new String[]{"create", "unload", "tp", "load", "delete", "archive", "list"})
+                    .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .sorted()
+                    .collect(Collectors.toList());
+        }
+
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("unload") || args[0].equalsIgnoreCase("tp")) {
+                return Bukkit.getWorlds().stream()
+                        .map(World::getName)
+                        .filter(w -> w.toLowerCase().startsWith(args[1].toLowerCase()))
+                        .sorted()
+                        .collect(Collectors.toList());
+            }
+
+            if (args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("archive") || args[0].equalsIgnoreCase("load")) {
+                return Worlds.getUnloadedWorlds()
+                        .stream()
+                        .filter(name -> name.toLowerCase().startsWith(args[1].toLowerCase()))
+                        .sorted()
+                        .collect(Collectors.toList());
+            }
+        }
+
+        return Collections.emptyList();
     }
 }
