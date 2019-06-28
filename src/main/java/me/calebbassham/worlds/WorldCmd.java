@@ -1,6 +1,7 @@
 package me.calebbassham.worlds;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
@@ -11,7 +12,13 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static me.calebbassham.pluginmessageformat.PluginMessageFormat.getMainColorPallet;
+import static me.calebbassham.pluginmessageformat.PluginMessageFormat.getPrefix;
 
 public class WorldCmd implements CommandExecutor, TabCompleter {
 
@@ -139,6 +146,25 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
 //                Bukkit.broadcastMessage("Generating (-750, 0, -750) to (750, 256, 750)");
 //            }
 
+        }
+
+        if (args.length == 1) {
+            if (args[0].equals("list")) {
+
+                sender.sendMessage(getPrefix() + getMainColorPallet().getHighlightTextColor() + "Worlds" + getMainColorPallet().getExtraTextColor() + ":");
+
+                Set<String> worldNames = new HashSet<>();
+                worldNames.addAll(Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toSet()));
+                worldNames.addAll(Worlds.getWorldDirectories().stream().map(File::getName).collect(Collectors.toSet()));
+
+                worldNames.stream()
+                        .sorted((world1, world2) -> Boolean.compare(Bukkit.getWorld(world1) == null, Bukkit.getWorld(world2) == null))
+                        .forEach(world -> {
+                            boolean loaded = Bukkit.getWorld(world) != null;
+                            sender.sendMessage(getMainColorPallet().getExtraTextColor() + "    - " + getMainColorPallet().getPrimaryTextColor() + world + getMainColorPallet().getExtraTextColor() + ChatColor.ITALIC + (!loaded ? " (unloaded)" : ""));
+                        });
+                return true;
+            }
         }
 
         return false;

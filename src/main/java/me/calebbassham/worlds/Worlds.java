@@ -4,6 +4,9 @@ import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Worlds {
 
@@ -44,6 +47,12 @@ public class Worlds {
     public static boolean isWorldDirectory(File file) {
         File regionDir = file.toPath().resolve("region").toFile();
         return regionDir != null && regionDir.exists() && regionDir.isDirectory();
+    }
+
+    public static Set<File> getWorldDirectories() {
+        return Arrays.stream(Bukkit.getWorldContainer().listFiles())
+                .filter(Worlds::isWorldDirectory)
+                .collect(Collectors.toSet());
     }
 
 }
