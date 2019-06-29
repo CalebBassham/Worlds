@@ -111,7 +111,7 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                 }
 
                 if (Util.deleteDirectory(worldDir)) {
-                    sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " has been deleted.");
+                    sender.sendMessage(getPrefix() + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + " has been deleted.");
                 } else {
                     sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " could not be deleted.");
                 }
