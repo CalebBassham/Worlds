@@ -1,5 +1,6 @@
 package me.calebbassham.worlds;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -32,6 +33,19 @@ public class Util {
                 }
             });
         }
+    }
+
+    static boolean deleteDirectory(File dir) {
+        if (dir.isDirectory()) {
+            File[] children = dir.listFiles();
+            if (children == null) return false;
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDirectory(children[i]);
+                if (!success) return false;
+            }
+        }
+
+        return dir.delete();
     }
 
 }

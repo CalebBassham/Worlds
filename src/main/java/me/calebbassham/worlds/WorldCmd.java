@@ -110,7 +110,7 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                if (worldDir.delete()) {
+                if (Util.deleteDirectory(worldDir)) {
                     sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " has been deleted.");
                 } else {
                     sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " could not be deleted.");
@@ -135,7 +135,7 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
 
                 sender.sendMessage(getPrefix() + "Archived " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
 
-                if(Worlds.getDirectoryInWorldsDirectory(worldName).delete()) {
+                if(Util.deleteDirectory(Worlds.getDirectoryInWorldsDirectory(worldName))) {
                     sender.sendMessage(getPrefix() + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + " has been deleted.");
                 } else {
                     sender.sendMessage(getErrorPrefix() + getErrorColorPallet().getValueTextColor() + worldName + getErrorColorPallet().getPrimaryTextColor() + " could not be deleted.");
