@@ -54,7 +54,17 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
                 }
 
                 sender.sendMessage(getPrefix() + "Started to create " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
-                new WorldCreator(worldName).createWorld();
+
+                WorldCreator wc = new WorldCreator(worldName);
+                if (worldName.endsWith("_nether")) {
+                    wc.environment(World.Environment.NETHER);
+                }
+
+                if (worldName.endsWith("_the_end")) {
+                    wc.environment(World.Environment.THE_END);
+                }
+                wc.createWorld();
+
                 sender.sendMessage(getPrefix() + "Finished creating " + getMainColorPallet().getValueTextColor() + worldName + getMainColorPallet().getPrimaryTextColor() + ".");
                 return true;
             }
