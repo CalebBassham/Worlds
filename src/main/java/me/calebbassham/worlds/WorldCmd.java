@@ -21,6 +21,17 @@ public class WorldCmd implements CommandExecutor, TabCompleter {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        if (args.length == 0) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(getErrorPrefix() + "Only players can use this command.");
+                return true;
+            }
+
+            Player player = (Player) sender;
+            sender.sendMessage(getPrefix() + "You are in " + getMainColorPallet().getHighlightTextColor() + player.getWorld().getName() + getMainColorPallet().getPrimaryTextColor() + ".");
+            return true;
+        }
+
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("create")) {
                 String worldName = args[1];
